@@ -11,7 +11,7 @@ clean : esp32-test-clean esp32-fullclean
 
 
 help:
-	@less _test_/make_help.txt
+	@less test/make_help.txt
 
 
 ####### ESP32 build command ############
@@ -32,9 +32,9 @@ env:
 	env | grep IDF
 
 THIS_ROOT := $(realpath .)
-BUILD_BASE ?= $(THIS_ROOT)/_test_/build/$(flavor)
+BUILD_BASE ?= $(THIS_ROOT)/test/build/$(flavor)
 esp32_build_dir := $(BUILD_BASE)
-esp32_src_dir := $(THIS_ROOT)/_test_/$(flavor)
+esp32_src_dir := $(THIS_ROOT)/test/$(flavor)
 tmp_build_dir := /tmp/tronferno-mcu/build
 
 esp32_cmake_generator := -G Ninja
@@ -88,7 +88,7 @@ $(gv_build_dir):
 
 .PHONY: FORCE
 ########### OpenOCD ###################
-esp32_ocd_sh :=  $(realpath ./_test_/esp32/esp32_ocd.sh) $(esp32_src_dir) $(esp32_build_dir)
+esp32_ocd_sh :=  $(realpath ./test/esp32/esp32_ocd.sh) $(esp32_src_dir) $(esp32_build_dir)
 
 esp32-flash-ocd:
 	$(esp32_ocd_sh) flash
@@ -100,25 +100,25 @@ esp32-ocd-loop:
 	$(esp32_ocd_sh) server_loop
 
 ########### Unit Testing ###############
-esp32_test_tgts_auto := build clean flash run all all-ocd flash-ocd flash-app-ocd
+esp32testtgts_auto := build clean flash run all all-ocd flash-ocd flash-app-ocd
 
 define GEN_RULE
 .PHONY: esp32-$(1)
 esp32-test-$(1):
 	make -C test/esp32 $(1)  port=$(PORT)
 endef
-$(foreach tgt,$(esp32_test_tgts_auto),$(eval $(call GEN_RULE,$(tgt))))
+$(foreach tgt,$(esp32testtgts_auto),$(eval $(call GEN_RULE,$(tgt))))
 
 
 ############## On Host ########################
 HOST_TEST_BUILD_PATH=$(BUILD_BASE)/../host/test
-HOST_TEST_SRC_PATH=$(THIS_ROOT)/_test_/host_test
+HOST_TEST_SRC_PATH=$(THIS_ROOT)/test/host_test
 
 .PHONY: test.cm.configure test.cm.build
 
 config_h:=$(HOST_TEST_BUILD_PATH)/config/sdkconfig.h
 config_cmake:=$(HOST_TEST_BUILD_PATH)/config/sdkconfig.cmake
-config_dir:=$(THIS_ROOT)/_test_/config
+config_dir:=$(THIS_ROOT)/test/config
 _config:=$(config_dir)/.config
 
 
@@ -130,7 +130,7 @@ menuconfig $(_config):
 
 $(config_h) $(config_cmake): $(_config)
 	python -m kconfgen  --kconfig $(THIS_ROOT)/Kconfig.projbuild --config $(_config) --output header $(config_h) --output cmake $(config_cmake)
-	cp $(config_h) $(config_cmake) $(THIS_ROOT)/_test_/host_test/ 
+	cp $(config_h) $(config_cmake) $(THIS_ROOT)/test/host_test/ 
 
 test.cm.configure:
 	rm -fr $(HOST_TEST_BUILD_PATH)
@@ -141,7 +141,7 @@ test.cm.configure:
 test.cm.configure_no_kconfgen:
 	rm -fr $(HOST_TEST_BUILD_PATH)
 	mkdir -p $(HOST_TEST_BUILD_PATH)/config
-	cp $(THIS_ROOT)/_test_/host_test/sdkconfig.h $(THIS_ROOT)/_test_/host_test/sdkconfig.cmake $(HOST_TEST_BUILD_PATH)/config/
+	cp $(THIS_ROOT)/test/host_test/sdkconfig.h $(THIS_ROOT)/test/host_test/sdkconfig.cmake $(HOST_TEST_BUILD_PATH)/config/
 	cmake -B $(HOST_TEST_BUILD_PATH) -D BUILD_HOST_TESTS=ON -S  $(HOST_TEST_SRC_PATH) #-G Ninja)
 
 
@@ -167,8 +167,8 @@ host-test-all:
 
 ############# Doxygen ###################
 doxy_flavors=usr dev api
-DOXY_BUILD_PATH=$(THIS_ROOT)/_doxy_/build
-DOXYFILE_PATH=$(THIS_ROOT)/_doxy_
+DOXY_BUILD_PATH=$(THIS_ROOT)/doxy/build
+DOXYFILE_PATH=$(THIS_ROOT)/doxy
 include doxygen_rules.mk
 
 $(DOXY_BUILD_PATH)/usr/input_files: $(DOXY_BUILD_PATH)/usr FORCE
