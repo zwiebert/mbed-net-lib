@@ -15,7 +15,7 @@ idf_component_register(
     INCLUDE_DIRS "include" 
     PRIV_INCLUDE_DIRS "src" 
     REQUIRES   esp_http_server
-    PRIV_REQUIRES  cli utils_debug uout
+    PRIV_REQUIRES  cli utils_debug utils_misc uout
                     esp_wifi mbedtls #PRIV_ESP_IDF
  )
 
