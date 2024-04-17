@@ -1,7 +1,7 @@
 
 
 #include "net/ipnet.h"
-#include "utils_misc/int_types.h"
+#include "stdint.h"
 #include "esp_netif_ip_addr.h"
 
 extern esp_ip4_addr_t ip4_address, ip4_gateway_address, ip4_netmask;

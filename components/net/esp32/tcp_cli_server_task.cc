@@ -13,7 +13,7 @@
 #include "freertos/task.h"
 #include "lwip/netdb.h"
 #include "lwip/sockets.h"
-#include "utils_misc/int_types.h"
+#include "stdint.h"
 //#include "net_http_server/http_server_setup.h"
 
 #include "time.h"

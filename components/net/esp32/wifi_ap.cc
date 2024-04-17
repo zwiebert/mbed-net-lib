@@ -23,7 +23,7 @@
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
-#include "utils_misc/int_types.h"
+#include "stdint.h"
 
 #define EXAMPLE_MAX_STA_CONN       4
 

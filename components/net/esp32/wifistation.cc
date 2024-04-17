@@ -14,7 +14,7 @@
 
 #include "net/ipnet.h"
 #include "txtio/inout.h"
-#include "utils_misc/int_types.h"
+#include "stdint.h"
 #include "main_loop/main_queue.hh"
 
 #define printf con_printf_fun

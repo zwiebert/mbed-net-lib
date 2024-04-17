@@ -14,7 +14,7 @@
 #include "debug/dbg.h"
 #include "net/ipnet.h"
 #include <net/ethernet_setup.hh>
-#include "utils_misc/int_types.h"
+#include "stdint.h"
 #include "main_loop/main_queue.hh"
 #include "debug/log.h"
 

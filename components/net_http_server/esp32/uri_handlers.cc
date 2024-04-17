@@ -2,7 +2,7 @@
 #include "net_http_server/http_server_setup.h"
 #include "net_http_server/content.hh"
 #include "uout/uout_builder_json.hh"
-#include "utils_misc/int_types.h"
+#include "stdint.h"
 #include "cli/mutex.hh"
 #include "net_http_server/esp32/http_server_esp32.h"
 
