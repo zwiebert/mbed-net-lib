@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = components-mcu
+PROJECT_NAME           = components-misc
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -44,7 +44,7 @@ PROJECT_NUMBER         =
 # for a project that appears at the top of each page and should give viewer a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          =
+PROJECT_BRIEF          = Mixed bag of components
 
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55
@@ -158,7 +158,7 @@ INLINE_INHERITED_MEMB  = NO
 # shortest path that makes the file name unique will be used
 # The default value is: YES.
 
-FULL_PATH_NAMES        = NO
+FULL_PATH_NAMES        = YES
 
 # The STRIP_FROM_PATH tag can be used to strip a user-defined part of the path.
 # Stripping is only done if one of the specified strings matches the left-hand
@@ -170,7 +170,21 @@ FULL_PATH_NAMES        = NO
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        = 
+STRIP_FROM_PATH        = /home/bertw/proj/mcu/libs/components-misc/components/cli/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/config_kvs/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/firmware_update/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/kvs/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/main_loop/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/nanopb/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net_connect/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net_http_server/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net_mqtt_client/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/stm32/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/storage/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/txtio/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/uout/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/weather/include 
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -179,7 +193,21 @@ STRIP_FROM_PATH        =
 # specify the list of include paths that are normally passed to the compiler
 # using the -I flag.
 
-STRIP_FROM_INC_PATH    =
+STRIP_FROM_INC_PATH    = /home/bertw/proj/mcu/libs/components-misc/components/cli/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/config_kvs/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/firmware_update/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/kvs/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/main_loop/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/nanopb/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net_connect/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net_http_server/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/net_mqtt_client/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/stm32/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/storage/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/txtio/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/uout/include \
+                         /home/bertw/proj/mcu/libs/components-misc/components/weather/include 
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't
@@ -342,7 +370,7 @@ MARKDOWN_SUPPORT       = YES
 # Minimum value: 0, maximum value: 99, default value: 5.
 # This tag requires that the tag MARKDOWN_SUPPORT is set to YES.
 
-TOC_INCLUDE_HEADINGS   = 10
+TOC_INCLUDE_HEADINGS   = 0
 
 # When enabled doxygen tries to link words that correspond to documented
 # classes, or namespaces to their corresponding documentation. Such a link can
