@@ -170,21 +170,21 @@ FULL_PATH_NAMES        = YES
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        = /home/bertw/proj/mcu/libs/components-misc/components/cli/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/config_kvs/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/firmware_update/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/kvs/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/main_loop/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/nanopb/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net_connect/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net_http_server/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net_mqtt_client/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/stm32/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/storage/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/txtio/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/uout/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/weather/include 
+STRIP_FROM_PATH        = components/cli/include \
+                         components/config_kvs/include \
+                         components/firmware_update/include \
+                         components/kvs/include \
+                         components/main_loop/include \
+                         components/nanopb/include \
+                         components/net/include \
+                         components/net_connect/include \
+                         components/net_http_server/include \
+                         components/net_mqtt_client/include \
+                         components/stm32/include \
+                         components/storage/include \
+                         components/txtio/include \
+                         components/uout/include \
+                         components/weather/include 
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -193,21 +193,21 @@ STRIP_FROM_PATH        = /home/bertw/proj/mcu/libs/components-misc/components/cl
 # specify the list of include paths that are normally passed to the compiler
 # using the -I flag.
 
-STRIP_FROM_INC_PATH    = /home/bertw/proj/mcu/libs/components-misc/components/cli/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/config_kvs/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/firmware_update/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/kvs/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/main_loop/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/nanopb/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net_connect/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net_http_server/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/net_mqtt_client/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/stm32/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/storage/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/txtio/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/uout/include \
-                         /home/bertw/proj/mcu/libs/components-misc/components/weather/include 
+STRIP_FROM_INC_PATH    = components/cli/include \
+                         components/config_kvs/include \
+                         components/firmware_update/include \
+                         components/kvs/include \
+                         components/main_loop/include \
+                         components/nanopb/include \
+                         components/net/include \
+                         components/net_connect/include \
+                         components/net_http_server/include \
+                         components/net_mqtt_client/include \
+                         components/stm32/include \
+                         components/storage/include \
+                         components/txtio/include \
+                         components/uout/include \
+                         components/weather/include 
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't
