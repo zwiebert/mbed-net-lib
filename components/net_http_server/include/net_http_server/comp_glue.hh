@@ -1,4 +1,5 @@
 /**
+ * \file   net_http_server/comp_glue.hh
  * \brief  optional header only glue inline functions, to glue components together.
  *         This header is supposed  to be included by an application.
  *
@@ -72,6 +73,12 @@ inline void soCfg_HTTP_PASSWORD(class UoutWriter &td) {
 #endif
 
 
+/**
+ * \brief                   Partially initialize applications settings object with this components settings
+ *
+ * \tparam settings_type    type of applications settings object
+ * \param[out] settings     applications settings object
+ */
 template<typename settings_type>
 constexpr void net_http_server_register_settings(settings_type &settings){
 #ifdef CONFIG_APP_USE_HTTP
