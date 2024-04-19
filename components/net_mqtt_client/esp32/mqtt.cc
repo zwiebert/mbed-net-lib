@@ -2,7 +2,6 @@
 #include "net_mqtt_client/mqtt.hh"
 
 #include "cli/cli.h"
-#include "txtio/inout.h"
 #include <uout/uo_callbacks.h>
 
 #include "esp_system.h"

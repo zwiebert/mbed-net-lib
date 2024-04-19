@@ -1,7 +1,6 @@
 #include "net/tcp_cli_server_setup.hh"
 #include "net/tcp_cli_server.h"
 
-
 #include "cli/cli.h"
 #include "cli/mutex.hh"
 #include "esp_event.h"
@@ -17,7 +16,6 @@
 //#include "net_http_server/http_server_setup.h"
 
 #include "time.h"
-#include "txtio/inout.h"
 #include <errno.h>
 #include <string.h>
 #include <sys/select.h>
@@ -26,11 +24,9 @@
 #include <utils_misc/mutex.hh>
 #include <utils_misc/new_malloc.hh>
 
+#include <debug/log.h>
 
 #define TAG "tcps"
-
-#define printf(...) io_printf_v(vrb3, __VA_ARGS__)
-#define perror(s)   io_printf_v(vrb3, "%s: %s\n", s, strerror(errno))
 
 
 #ifdef CONFIG_NET_TCP_CLI_CLIENT_DEBUG
@@ -41,7 +37,7 @@
 #define D(x)
 #define DT(x)
 #endif
-#define logtag "net.tcp_cli_client"
+#define logtag "net"
 
 constexpr int TCPS_CCONN_MAX = CONFIG_APP_TCPS_CONNECTIONS_MAX;
 
@@ -105,7 +101,7 @@ public:
     }
 
     rm_fd(fd);
-    printf("tcps: disconnected. %d client(s) still connected\n", cconn_count);
+    db_logi(logtag, "tcps: disconnected. %d client(s) still connected\n", cconn_count);
   }
 
   int foreach_fd(fd_set *fdsp, int count, fd_funT fd_fun, void *args) {

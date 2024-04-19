@@ -4,7 +4,7 @@ idf_component_register(
     SRCS ${srcs} 
     INCLUDE_DIRS "./include" 
     REQUIRES 
-    PRIV_REQUIRES cli uout txtio
+    PRIV_REQUIRES cli uout
                   mqtt lwip #PRIV_ESP_IDF
  )
 

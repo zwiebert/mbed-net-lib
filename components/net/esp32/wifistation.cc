@@ -13,7 +13,6 @@
 #include "lwip/sys.h"
 
 #include "net/ipnet.h"
-#include "txtio/inout.h"
 #include "stdint.h"
 #include "main_loop/main_queue.hh"
 
