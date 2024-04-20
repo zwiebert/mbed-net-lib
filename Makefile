@@ -122,14 +122,14 @@ config_dir:=$(THIS_ROOT)/test/config
 _config:=$(config_dir)/.config
 
 
-Kconfig.projbuild:
+Kconfig:
 	ls */Kconfig | sed -E -e 's/^/rsource  \"/' -e 's/$$/\"/' >$@
 
 menuconfig $(_config):
-	mkdir -p $(config_dir) && cd $(config_dir) && menuconfig $(THIS_ROOT)/Kconfig.projbuild
+	mkdir -p $(config_dir) && cd $(config_dir) && menuconfig $(THIS_ROOT)/Kconfig
 
 $(config_h) $(config_cmake) config: $(_config)
-	python -m kconfgen  --kconfig $(THIS_ROOT)/Kconfig.projbuild --config $(_config) --output header $(config_h) --output cmake $(config_cmake)
+	python -m kconfgen  --kconfig $(THIS_ROOT)/Kconfig --config $(_config) --output header $(config_h) --output cmake $(config_cmake)
 	cp $(config_h) $(config_cmake) $(THIS_ROOT)/test/host_test/ 
 
 test.cm.configure: $(config_h) $(config_cmake)
