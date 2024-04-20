@@ -12,8 +12,9 @@ APIs are not stable. When a component matures later, it may move out into its ow
    *  Create API documentation `make doxy-api-view`
    *  Crate source documentation `make doxy-dev-view`
 
-#### Testing  
-   *  `make host-test-all`  configure, build and runs all tests
+#### Testing
+   * work in progress
+   * for now tests are run from  application or a separate test package. Using git submodule to get all dependencies was not feasable.
 
 #### Build
 
