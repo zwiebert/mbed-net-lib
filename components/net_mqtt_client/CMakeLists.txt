@@ -1,4 +1,4 @@
-set(srcs  mqtt.cc esp32/mqtt.cc) 
+set(srcs  src/mqtt.cc esp32/mqtt.cc) 
 
 idf_component_register(
     SRCS ${srcs} 
