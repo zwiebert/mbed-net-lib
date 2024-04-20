@@ -288,11 +288,6 @@ public:
 
     FD_SET(sockfd, &rfds);
     FD_SET(sockfd_ia, &rfds);
-#ifdef CONFIG_APP_USE_CLI_TASK_EXP
-     FD_SET(STDIN_FILENO, &rfds);
-     if (n <= STDIN_FILENO)
-       n = STDIN_FILENO+1;
-   #endif
 
     int count = lwip_select(n, &rfds, NULL, NULL, NULL);
     if (count < 0) {
@@ -321,14 +316,6 @@ public:
         ::write(new_fd, welcome, sizeof welcome);
       }
     }
-#ifdef CONFIG_APP_USE_CLI_TASK_EXP
-     if (FD_ISSET(STDIN_FILENO, &rfds)) {
-       cli_loop();
-
-       FD_CLR(STDIN_FILENO, &rfds);
-       --count;
-     }
-   #endif
     count = foreach_fd(&rfds, count, &TcpCliServer::handle_input, 0);
 
   }
