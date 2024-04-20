@@ -1,0 +1,3 @@
+rsource "components/net_http_server/Kconfig"
+rsource "components/net/Kconfig"
+rsource "components/net_mqtt_client/Kconfig"
