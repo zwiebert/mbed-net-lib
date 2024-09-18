@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <string.h>
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "esp_event.h"
 #include "esp_err.h"
 #include "esp_event.h"
+#include "esp_mac.h"
 #include "esp_log.h"
 #include "esp_eth.h"
-#include "esp32/rom/gpio.h"
 #include "esp_netif.h"
+
 #include "driver/gpio.h"
 #include "debug/dbg.h"
 #include "net/ipnet.h"
@@ -172,7 +174,7 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
 
   // power-on phy here
   if (ethernet_phy_power_pin >= 0) {
-    gpio_pad_select_gpio(ethernet_phy_power_pin);
+    esp_rom_gpio_pad_select_gpio(ethernet_phy_power_pin);
     gpio_set_direction(static_cast<gpio_num_t>(ethernet_phy_power_pin), GPIO_MODE_OUTPUT);
     gpio_set_level(static_cast<gpio_num_t>(ethernet_phy_power_pin), 1);
     vTaskDelay(pdMS_TO_TICKS(300));

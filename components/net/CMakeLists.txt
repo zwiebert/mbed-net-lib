@@ -19,7 +19,7 @@ idf_component_register(
     INCLUDE_DIRS "./include" 
     REQUIRES uout
     PRIV_REQUIRES main_loop  utils_misc net_http_server cli utils_debug uout
-                  esp_netif esp_wifi esp_eth esp_http_client #PRIV_ESP_IDF
+                  esp_netif esp_wifi esp_eth esp_http_client esp_driver_gpio #PRIV_ESP_IDF
  )
 
 component_compile_options(${comp_compile_opts})
