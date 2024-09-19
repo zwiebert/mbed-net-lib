@@ -38,7 +38,10 @@ static int8_t ethernet_phy_power_pin = -1;
 static esp_netif_t *eth_netif;
 static esp_eth_mac_t *mac;
 static esp_eth_phy_t *phy;
-static esp_eth_handle_t s_eth_handle = NULL;
+static esp_eth_handle_t s_eth_handle;
+static esp_eth_netif_glue_handle_t eth_netif_glue;
+static esp_event_handler_instance_t eth_event_handler_instance;
+static esp_event_handler_instance_t got_ip_handler_instance;
 
 static const char *TAG = "ethernet";
 
@@ -97,6 +100,17 @@ static void got_ip_event_handler(void *arg, esp_event_base_t event_base, int32_t
   mainLoop_callFun(ipnet_connected);
 }
 
+static void ethernet_switch_phy_power(bool on = false) {
+  if (ethernet_phy_power_pin >= 0) {
+    ESP_LOGI(TAG, "Power %s PHY using gpio %d", on ? "on" : "off", ethernet_phy_power_pin);
+
+    esp_rom_gpio_pad_select_gpio(ethernet_phy_power_pin);
+    gpio_set_direction(static_cast<gpio_num_t>(ethernet_phy_power_pin), GPIO_MODE_OUTPUT);
+    gpio_set_level(static_cast<gpio_num_t>(ethernet_phy_power_pin), 1);
+    vTaskDelay(pdMS_TO_TICKS(300));
+  }
+}
+
 static void ethernet_configure(enum lanPhy lan_phy, int lan_pwr_gpio) {
 
   switch (lan_phy) {
@@ -118,9 +132,35 @@ static void ethernet_configure(enum lanPhy lan_phy, int lan_pwr_gpio) {
 
 bool ethernet_setdown() {
   if (s_eth_handle) {
+
     if (auto ec = esp_eth_stop(s_eth_handle); ec != ESP_OK) {
       ESP_LOGE(TAG, "stopping ethernet driver failed: %s", esp_err_to_name(ec));
     }
+
+    // unregister handlers
+    if (eth_event_handler_instance) {
+      if (auto ec = esp_event_handler_instance_unregister(ETH_EVENT, ESP_EVENT_ANY_ID, eth_event_handler_instance); ec != ESP_OK) {
+        ESP_LOGE(TAG, "unregistering eth-event-handler failed: %s", esp_err_to_name(ec));
+      } else
+        eth_event_handler_instance = 0;
+    }
+    if (got_ip_handler_instance) {
+      if (auto ec = esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_ETH_GOT_IP, got_ip_handler_instance); ec != ESP_OK) {
+        ESP_LOGE(TAG, "unregistering got-ip-handler failed: %s", esp_err_to_name(ec));
+      } else
+        got_ip_handler_instance = 0;
+    }
+
+    if (auto ec = esp_eth_del_netif_glue(eth_netif_glue); ec != ESP_OK) {
+      ESP_LOGE(TAG, "deleting netif_glue failed: %s", esp_err_to_name(ec));
+    } else
+      eth_netif_glue = 0;
+
+    if (eth_netif) {
+      esp_netif_destroy(eth_netif);
+      eth_netif = 0;
+    }
+    esp_netif_deinit();
 
     if (auto ec = esp_eth_driver_uninstall(s_eth_handle); ec != ESP_OK) {
       ESP_LOGE(TAG, "driver un-install failed: %s", esp_err_to_name(ec));
@@ -129,56 +169,31 @@ bool ethernet_setdown() {
     s_eth_handle = 0;
   }
 
-  if (phy) {
-    phy = 0;
-  }
-
   if (mac) {
+    mac->del(mac);
     mac = 0;
   }
 
-  if (eth_netif) {
-    esp_netif_destroy(eth_netif);
-    eth_netif = 0;
+  if (phy) {
+    phy->del(phy);
+    phy = 0;
   }
-  ESP_LOGI(TAG, "Ethernet removal was successful");
+  // power-down phy here
+  ethernet_switch_phy_power(false);
 
   return true;
 }
 
 bool ethernet_setup(struct cfg_lan *cfg_lan) {
-  if (s_eth_handle)
-    ethernet_setdown();
+
+  ethernet_setdown();
 
   // set phy function and power gpio according to user
   ethernet_configure(cfg_lan->phy, cfg_lan->pwr_gpio);
 
-  {
-    // get netif
-    esp_netif_config_t cfg = ESP_NETIF_DEFAULT_ETH();
-    if (eth_netif = esp_netif_new(&cfg); !eth_netif) {
-      ESP_LOGE(TAG, "creating new netif failed");
-      goto error;
-    }
-  }
-
-  // register handler
-  if (auto ec = esp_event_handler_instance_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_event_handler, NULL, NULL); ec != ESP_OK) {
-    ESP_LOGE(TAG, "registering eth-event-handler failed: %s", esp_err_to_name(ec));
-    goto error;
-  }
-  if (auto ec = esp_event_handler_instance_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &got_ip_event_handler, NULL, NULL); ec != ESP_OK) {
-    ESP_LOGE(TAG, "registering got-ip-handler failed: %s", esp_err_to_name(ec));
-    goto error;
-  }
-
   // power-on phy here
-  if (ethernet_phy_power_pin >= 0) {
-    esp_rom_gpio_pad_select_gpio(ethernet_phy_power_pin);
-    gpio_set_direction(static_cast<gpio_num_t>(ethernet_phy_power_pin), GPIO_MODE_OUTPUT);
-    gpio_set_level(static_cast<gpio_num_t>(ethernet_phy_power_pin), 1);
-    vTaskDelay(pdMS_TO_TICKS(300));
-  }
+  ethernet_switch_phy_power(true);
+
   {
     // Setup MAC
     eth_mac_config_t mac_config = ETH_MAC_DEFAULT_CONFIG();
@@ -207,11 +222,29 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
     }
   }
   {
+    // create netif
+    esp_netif_config_t cfg = ESP_NETIF_DEFAULT_ETH();
+    if (eth_netif = esp_netif_new(&cfg); !eth_netif) {
+      ESP_LOGE(TAG, "creating new netif failed");
+      goto error;
+    }
+  }
+  {
+    eth_netif_glue = esp_eth_new_netif_glue(s_eth_handle);
     /* attach Ethernet driver to TCP/IP stack */
-    if (auto ec = esp_netif_attach(eth_netif, esp_eth_new_netif_glue(s_eth_handle)); ec != ESP_OK) {
+    if (auto ec = esp_netif_attach(eth_netif, eth_netif_glue); ec != ESP_OK) {
       ESP_LOGE(TAG, "attaching driver to tcp/ip-stack failed: %s", esp_err_to_name(ec));
       goto error;
     }
+  }
+  // register handlers
+  if (auto ec = esp_event_handler_instance_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_event_handler, NULL, &eth_event_handler_instance); ec != ESP_OK) {
+    ESP_LOGE(TAG, "registering eth-event-handler failed: %s", esp_err_to_name(ec));
+    goto error;
+  }
+  if (auto ec = esp_event_handler_instance_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &got_ip_event_handler, NULL, &got_ip_handler_instance); ec != ESP_OK) {
+    ESP_LOGE(TAG, "registering got-ip-handler failed: %s", esp_err_to_name(ec));
+    goto error;
   }
   {
     /* start Ethernet driver state machine */
