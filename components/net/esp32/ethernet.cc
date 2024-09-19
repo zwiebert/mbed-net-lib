@@ -206,7 +206,7 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
   {
     // Setup PHY
     eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
-    phy_config.phy_addr = 0;
+    phy_config.phy_addr = CONFIG_NET_ETH_PHY_ADDR;
     phy_config.reset_gpio_num = -1;
     if (phy = ethernet_create_phy(&phy_config); !phy) {
       ESP_LOGE(TAG, "setup PHY failed");

@@ -83,9 +83,14 @@ menu "zwiebert: Networking"
         bool "Enable TCP-CLI-client debug messages"
         default n        
     config NET_NETWORK_DEBUG
-        bool "Enable networ connection debug messages"
+        bool "Enable network connection debug messages"
         default n
-        
+
+    config NET_ETH_PHY_ADDR
+        int "PHY Address"
+        range 0 31
+        default 0
+        help
+           Set PHY address according your board schematic. 
 
 endmenu
-
