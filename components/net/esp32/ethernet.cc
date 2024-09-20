@@ -111,25 +111,6 @@ static void ethernet_switch_phy_power(bool on = false) {
   }
 }
 
-static void ethernet_configure(enum lanPhy lan_phy, int lan_pwr_gpio) {
-
-  switch (lan_phy) {
-  case lanPhyRTL8201:
-    ethernet_create_phy = esp_eth_phy_new_rtl8201;
-    break;
-  case lanPhyIP101:
-    ethernet_create_phy = esp_eth_phy_new_ip101;
-    break;
-  case lanPhyLAN8720:
-  default:
-    ethernet_create_phy = esp_eth_phy_new_lan87xx;
-    break;
-  }
-
-  ethernet_phy_power_pin = lan_pwr_gpio;
-
-}
-
 bool ethernet_setdown() {
   if (s_eth_handle) {
 
@@ -188,26 +169,76 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
 
   ethernet_setdown();
 
-  // set phy function and power gpio according to user
-  ethernet_configure(cfg_lan->phy, cfg_lan->pwr_gpio);
-
-  // power-on phy here
-  ethernet_switch_phy_power(true);
-
   {
-    // Setup MAC
+    // Configure MAC and PHY
     eth_mac_config_t mac_config = ETH_MAC_DEFAULT_CONFIG();
     eth_esp32_emac_config_t esp32_emac_config = ETH_ESP32_EMAC_DEFAULT_CONFIG();
+    eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
+
+    // Board specific configurations
+    switch (cfg_lan->phy) {
+
+    case lanBoardOlimexEsp32Gateway:
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
+      esp32_emac_config.smi_gpio.mdc_num = 23;
+      esp32_emac_config.smi_gpio.mdio_num = 18;
+      esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
+      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_OUT_180_GPIO;
+      phy_config.phy_addr = 0;
+      phy_config.reset_gpio_num = -1;
+      ethernet_phy_power_pin = 5;
+      break;
+
+    case lanBoardOlimexEsp32Poe:
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
+      esp32_emac_config.smi_gpio.mdc_num = 23;
+      esp32_emac_config.smi_gpio.mdio_num = 18;
+      esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
+      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_OUT_180_GPIO;
+      phy_config.phy_addr = 0;
+      phy_config.reset_gpio_num = -1;
+      ethernet_phy_power_pin = 12;
+      break;
+
+    case lanBoardWt32Eth01:
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
+      esp32_emac_config.smi_gpio.mdc_num = 23;
+      esp32_emac_config.smi_gpio.mdio_num = 18;
+      esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_EXT_IN;
+      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_IN_GPIO;
+      phy_config.phy_addr = 1;
+      phy_config.reset_gpio_num = -1;
+      ethernet_phy_power_pin = 16;
+      break;
+
+    case lanPhyRTL8201:
+      ethernet_create_phy = esp_eth_phy_new_rtl8201;
+      ethernet_phy_power_pin = cfg_lan->pwr_gpio;
+      break;
+
+    case lanPhyIP101:
+      ethernet_create_phy = esp_eth_phy_new_ip101;
+      ethernet_phy_power_pin = cfg_lan->pwr_gpio;
+      break;
+
+    case lanPhyLAN8720:
+    default:
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
+      phy_config.phy_addr = CONFIG_NET_ETH_PHY_ADDR;
+      phy_config.reset_gpio_num = -1;
+      ethernet_phy_power_pin = cfg_lan->pwr_gpio;
+
+    }
+
+    // power-on phy here
+    ethernet_switch_phy_power(true);
+
+    // Setup MAC
     if (mac = esp_eth_mac_new_esp32(&esp32_emac_config, &mac_config); !mac) {
       ESP_LOGE(TAG, "setup MAC failed");
       goto error;
     }
-  }
-  {
     // Setup PHY
-    eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
-    phy_config.phy_addr = CONFIG_NET_ETH_PHY_ADDR;
-    phy_config.reset_gpio_num = -1;
     if (phy = ethernet_create_phy(&phy_config); !phy) {
       ESP_LOGE(TAG, "setup PHY failed");
       goto error;

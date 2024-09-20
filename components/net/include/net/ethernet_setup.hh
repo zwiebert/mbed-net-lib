@@ -8,8 +8,8 @@
 #include <stdint.h>
 
 /// \brief Kinds of supported PHY hardware.
-enum lanPhy {
-  lanPhyNone, lanPhyLAN8720, lanPhyRTL8201, lanPhyIP101, lanPhyLEN,
+enum lanPhy : int8_t {
+  lanPhyNone, lanPhyLAN8720, lanPhyRTL8201, lanPhyIP101, lanBoardOlimexEsp32Gateway, lanBoardOlimexEsp32Poe, lanBoardWt32Eth01, lanPhyLEN,
 };
 #define CONFIG_APP_LAN_PHY lanPhyLAN8720
 #define CONFIG_APP_LAN_PWR_GPIO -1
