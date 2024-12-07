@@ -34,7 +34,7 @@ static esp_eth_phy_t* (*ethernet_create_phy)(const eth_phy_config_t *config);
 
 #define DX(x) x
 
-static int8_t ethernet_phy_power_pin = -1;
+static int ethernet_phy_power_pin = -1;
 static esp_netif_t *eth_netif;
 static esp_eth_mac_t *mac;
 static esp_eth_phy_t *phy;
@@ -179,36 +179,59 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
     switch (cfg_lan->phy) {
 
     case lanBoardOlimexEsp32Gateway:
-      ethernet_create_phy = esp_eth_phy_new_lan87xx;
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
       esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_OUT_180_GPIO;
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 0;
       phy_config.reset_gpio_num = -1;
       ethernet_phy_power_pin = 5;
+      ESP_LOGI(TAG, "board=%s, phy=%s, clock_mode=%d, clock_gpio=%d, phy_addr=%ld, reset_gpio=%d, phy_power_gpio=%d", "Olimex-ESP32-Gateway", "LAN87xx",
+          esp32_emac_config.clock_config.rmii.clock_mode, esp32_emac_config.clock_config.rmii.clock_gpio, phy_config.phy_addr, phy_config.reset_gpio_num,
+          ethernet_phy_power_pin);
       break;
 
     case lanBoardOlimexEsp32Poe:
-      ethernet_create_phy = esp_eth_phy_new_lan87xx;
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
       esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_OUT_180_GPIO;
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 0;
       phy_config.reset_gpio_num = -1;
       ethernet_phy_power_pin = 12;
+      ESP_LOGI(TAG, "board=%s, phy=%s, clock_mode=%d, clock_gpio=%d, phy_addr=%ld, reset_gpio=%d, phy_power_gpio=%d", "Olimex-ESP32-POE", "LAN87xx",
+          esp32_emac_config.clock_config.rmii.clock_mode, esp32_emac_config.clock_config.rmii.clock_gpio, phy_config.phy_addr, phy_config.reset_gpio_num,
+          ethernet_phy_power_pin);
       break;
 
     case lanBoardWt32Eth01:
-      ethernet_create_phy = esp_eth_phy_new_lan87xx;
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_EXT_IN;
       esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_IN_GPIO;
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 1;
       phy_config.reset_gpio_num = -1;
       ethernet_phy_power_pin = 16;
+      ESP_LOGI(TAG, "board=%s, phy=%s, clock_mode=%d, clock_gpio=%d, phy_addr=%ld, reset_gpio=%d, phy_power_gpio=%d", "wt32-eth01", "LAN87xx",
+          esp32_emac_config.clock_config.rmii.clock_mode, esp32_emac_config.clock_config.rmii.clock_gpio, phy_config.phy_addr, phy_config.reset_gpio_num,
+          ethernet_phy_power_pin);
+      break;
+
+    case lanBoardTInternetCom:
+      esp32_emac_config.smi_gpio.mdc_num = 23;
+      esp32_emac_config.smi_gpio.mdio_num = 18;
+      esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
+      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_APPL_CLK_OUT_GPIO;
+      ethernet_create_phy = esp_eth_phy_new_lan87xx;
+      phy_config.phy_addr = 0;
+      phy_config.reset_gpio_num = 5;
+      ethernet_phy_power_pin = 4;
+      ESP_LOGI(TAG, "board=%s, phy=%s, clock_mode=%d, clock_gpio=%d, phy_addr=%ld, reset_gpio=%d, phy_power_gpio=%d", "T-Internet-Com", "LAN87xx",
+          esp32_emac_config.clock_config.rmii.clock_mode, esp32_emac_config.clock_config.rmii.clock_gpio, phy_config.phy_addr, phy_config.reset_gpio_num,
+          ethernet_phy_power_pin);
       break;
 
     case lanPhyRTL8201:
@@ -227,7 +250,9 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
       phy_config.phy_addr = CONFIG_NET_ETH_PHY_ADDR;
       phy_config.reset_gpio_num = -1;
       ethernet_phy_power_pin = cfg_lan->pwr_gpio;
-
+      ESP_LOGI(TAG, "board=%s, phy=%s, clock_mode=%d, clock_gpio=%d, phy_addr=%ld, reset_gpio=%d, phy_power_gpio=%d", "esp32-???", "LAN87xx",
+          esp32_emac_config.clock_config.rmii.clock_mode, esp32_emac_config.clock_config.rmii.clock_gpio, phy_config.phy_addr, phy_config.reset_gpio_num,
+          ethernet_phy_power_pin);
     }
 
     // power-on phy here

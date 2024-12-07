@@ -9,7 +9,7 @@
 
 /// \brief Kinds of supported PHY hardware.
 enum lanPhy : int8_t {
-  lanPhyNone, lanPhyLAN8720, lanPhyRTL8201, lanPhyIP101, lanBoardOlimexEsp32Gateway, lanBoardOlimexEsp32Poe, lanBoardWt32Eth01, lanPhyLEN,
+  lanPhyNone, lanPhyLAN8720, lanPhyRTL8201, lanPhyIP101, lanBoardOlimexEsp32Gateway, lanBoardOlimexEsp32Poe, lanBoardWt32Eth01, lanBoardTInternetCom, lanPhyLEN,
 };
 #define CONFIG_APP_LAN_PHY lanPhyLAN8720
 #define CONFIG_APP_LAN_PWR_GPIO -1
