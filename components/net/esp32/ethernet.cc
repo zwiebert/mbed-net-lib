@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "esp_eth_phy_lan87xx.h"
+#include "esp_eth_phy_ip101.h"
+#include "esp_eth_phy_rtl8201.h"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_system.h"
@@ -29,7 +33,6 @@
 
 extern esp_ip4_addr_t ip4_address, ip4_gateway_address, ip4_netmask;
 
-extern "C" esp_eth_phy_t* my_esp_eth_phy_new_lan8720(const eth_phy_config_t *config);
 static esp_eth_phy_t* (*ethernet_create_phy)(const eth_phy_config_t *config);
 
 #define DX(x) x
@@ -182,7 +185,7 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
-      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_OUT_180_GPIO;
+      esp32_emac_config.clock_config.rmii.clock_gpio = 17; //EMAC_CLK_OUT_180_GPIO;
       ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 0;
       phy_config.reset_gpio_num = -1;
@@ -196,7 +199,7 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
-      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_OUT_180_GPIO;
+      esp32_emac_config.clock_config.rmii.clock_gpio = 17; //EMAC_CLK_OUT_180_GPIO;
       ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 0;
       phy_config.reset_gpio_num = -1;
@@ -210,7 +213,7 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_EXT_IN;
-      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_CLK_IN_GPIO;
+      esp32_emac_config.clock_config.rmii.clock_gpio = 0; //EMAC_CLK_IN_GPIO;
       ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 1;
       phy_config.reset_gpio_num = -1;
@@ -224,7 +227,7 @@ bool ethernet_setup(struct cfg_lan *cfg_lan) {
       esp32_emac_config.smi_gpio.mdc_num = 23;
       esp32_emac_config.smi_gpio.mdio_num = 18;
       esp32_emac_config.clock_config.rmii.clock_mode = EMAC_CLK_OUT;
-      esp32_emac_config.clock_config.rmii.clock_gpio = EMAC_APPL_CLK_OUT_GPIO;
+      esp32_emac_config.clock_config.rmii.clock_gpio = 0; //EMAC_APPL_CLK_OUT_GPIO;
       ethernet_create_phy = esp_eth_phy_new_lan87xx;
       phy_config.phy_addr = 0;
       phy_config.reset_gpio_num = 5;
