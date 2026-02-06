@@ -9,6 +9,7 @@
 #pragma once
 
 #include <esp_http_server.h>
+#include <sys/select.h>
 
 
 
