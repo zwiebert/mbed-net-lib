@@ -64,7 +64,7 @@ bool httpClient_downloadFile(const char *srcUrl, const char *dstFile) {
     case HTTP_EVENT_ON_CONNECTED:
       ESP_LOGI(TAG, "HTTP_EVENT_ON_CONNECTED");
       break;
-    case HTTP_EVENT_HEADER_SENT:
+    case HTTP_EVENT_HEADERS_SENT:
       ESP_LOGI(TAG, "HTTP_EVENT_HEADER_SENT");
       break;
     case HTTP_EVENT_ON_HEADER:
