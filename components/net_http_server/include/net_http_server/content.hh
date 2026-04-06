@@ -47,7 +47,7 @@ private:
  */
 struct web_content {
   const char *content; ///<  content data as byte array
-  const char *content_encoding;  ///< NULL or, if \ref content is compressed, the value for HTTP header CONTENT_ENCODING e.g. "gzip", "br"
+  const char *content_encoding = nullptr;  ///< NULL or, if \ref content is compressed, the value for HTTP header CONTENT_ENCODING e.g. "gzip", "br"
   unsigned content_length; ///< byte-length of content data
 };
 
@@ -58,7 +58,7 @@ struct file_map {
   const char *uri;   ///<  URI  (e.g. "/index.html")
   const char *type;  ///< MIME type  (e.g. "text/javascript")
   struct web_content wc;  ///< content
-  ContentReader *content_reader;  ///< if not NULL use this to provide the content data
+  ContentReader *content_reader = nullptr;  ///< if not NULL use this to provide the content data
 };
 
 /**

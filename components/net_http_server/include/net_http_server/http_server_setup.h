@@ -2,7 +2,8 @@
  * \file   net_http_server/http_server_setup.h
  * \brief  Create HTTP server
  */
-
+#include <sdkconfig.h>
+//////////////////////
 #ifdef __cplusplus
   extern "C++" {
 #endif

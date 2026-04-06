@@ -1,3 +1,6 @@
+#include <sdkconfig.h>
+//////////////////////
+
 #include <net/network_connection.hh>
 #include <net/comp_glue.hh>
 #include <debug/log.h>
@@ -6,25 +9,32 @@
 
 nwConnection network_default, network_fallback;
 
+#ifdef CONFIG_APP_USE_WLAN
 inline void nwc_wifi_sta_setup() {
   config_setup_wifiStation();
 }
 inline void nwc_wifi_sta_setdown() {
   wifistation_setdown();
 }
+#endif
+
+#ifdef CONFIG_APP_USE_WLAN_AP
 inline void nwc_wifi_ap_setup() {
   config_setup_wifiAp();
 }
 inline void nwc_wifi_ap_setdown() {
   wifiAp_setdown();
 }
+#endif
+
+#ifdef CONFIG_APP_USE_LAN
 inline void nwc_ethernet_setup() {
   config_setup_ethernet();
 }
 inline void nwc_ethernet_setdown() {
   ethernet_setdown();
 }
-
+#endif
 
 static struct {
   nwConnection current_connection;
@@ -104,13 +114,19 @@ void nwc_disconnect() {
   case nwNone:
     break;
   case nwWlanAp:
+#ifdef CONFIG_APP_USE_WLAN_AP
     nwc_wifi_ap_setdown();
+#endif
     break;
   case nwWlanSta:
+#ifdef CONFIG_APP_USE_WLAN_AP
     nwc_wifi_sta_setdown();
+#endif
     break;
   case nwLan:
+#ifdef CONFIG_APP_USE_LAN
     nwc_ethernet_setdown();
+#endif
     break;
   default:
     abort();

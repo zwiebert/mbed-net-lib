@@ -2,9 +2,13 @@ set(srcs  src/http_server.cc
  esp32/http_server.cc esp32/uri_handlers.cc
 )
 
-if(DEFINED CONFIG_APP_USE_WS)
-  list(APPEND srcs esp32/websocket.cc)
+if(CONFIG_HTTPD_WS_SUPPORT)
+   list(APPEND srcs esp32/websocket.cc)
+else()
+    message(STATUS "http_server: WebSocket is disabled in esp_http_server component")
 endif()
+
+
 
 
 include("${CMAKE_CURRENT_LIST_DIR}/../source_filter.cmake" OPTIONAL)
