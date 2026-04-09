@@ -66,9 +66,10 @@ static void set_server_by_config(struct cfg_ntp *cfg_ntp) {
 #endif
 
     // Get NTP server from DHCP
-#ifdef  LWIP_DHCP_GET_NTP_SRV
+#if  LWIP_DHCP_GET_NTP_SRV
     bool use_dhcp = strcmp(server, "dhcp") == 0;
     esp_sntp_servermode_dhcp(use_dhcp);
+
 
     if (use_dhcp) {
       if (SNTP_MAX_SERVERS > 1)

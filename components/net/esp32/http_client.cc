@@ -53,8 +53,9 @@ static bool httpClient_get(esp_http_client_config_t *config) {
 }
 
 bool httpClient_downloadFile(const char *srcUrl, const char *dstFile) {
-
-  esp_http_client_config_t config = { .url = srcUrl, .event_handler = [](esp_http_client_event_t *evt) -> esp_err_t {
+esp_http_client_config_t config  = {};
+  config.url = srcUrl;
+  config.event_handler = [](esp_http_client_event_t *evt) -> esp_err_t {
     static int fd = -1;
 
     switch (evt->event_id) {
@@ -64,7 +65,7 @@ bool httpClient_downloadFile(const char *srcUrl, const char *dstFile) {
     case HTTP_EVENT_ON_CONNECTED:
       ESP_LOGI(TAG, "HTTP_EVENT_ON_CONNECTED");
       break;
-    case HTTP_EVENT_HEADER_SENT:
+    case HTTP_EVENT_HEADERS_SENT:
       ESP_LOGI(TAG, "HTTP_EVENT_HEADER_SENT");
       break;
     case HTTP_EVENT_ON_HEADER:
@@ -112,7 +113,9 @@ bool httpClient_downloadFile(const char *srcUrl, const char *dstFile) {
       break;
     }
     return ESP_OK;
-  }, .user_data = (void*) dstFile, };
+  };
+  
+  config.user_data = (void*) dstFile;
 
   return httpClient_get(&config);
 }
@@ -122,9 +125,11 @@ bool httpClient_getToBuffer(const char *srcUrl, char *buf, size_t buf_size) {
     char *buf;
     size_t buf_size;
     int buf_pos;
-  } ud = { buf, buf_size };
+  } ud = { buf, buf_size, 0 };
 
-  esp_http_client_config_t config = { .url = srcUrl, .event_handler = [](esp_http_client_event_t *evt) -> esp_err_t {
+  esp_http_client_config_t config = {};
+  config.url = srcUrl;
+  config.event_handler = [](esp_http_client_event_t *evt) -> esp_err_t {
 
 
     switch (evt->event_id) {
@@ -165,7 +170,9 @@ bool httpClient_getToBuffer(const char *srcUrl, char *buf, size_t buf_size) {
       break;
     }
     return ESP_OK;
-  }, .user_data = (void*) &ud, };
+  };
+
+  config.user_data = (void*) &ud;
 
   return httpClient_get(&config);
 }

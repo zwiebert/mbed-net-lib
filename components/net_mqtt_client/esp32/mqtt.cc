@@ -185,8 +185,11 @@ void Net_Mqtt::publish(const char *topic, const char *data, bool retain) {
 }
 
 static bool io_mqtt_create_client(struct cfg_mqtt *cmc) {
-  esp_mqtt_client_config_t mqtt_cfg = { .broker = { .address = { .uri = cmc->url } }, .credentials = { .username = cmc->user, .client_id = cmc->client_id,
-      .authentication = { .password = cmc->password } } };
+  esp_mqtt_client_config_t mqtt_cfg = {};
+    mqtt_cfg.broker = { .address = { .uri = cmc->url } };
+    mqtt_cfg.credentials = { .username = cmc->user,
+                             .client_id = cmc->client_id,
+                            .authentication = { .password = cmc->password }};
 
   if (mqtt_cfg.broker.address.uri && *mqtt_cfg.broker.address.uri == '\0') {
     ESP_LOGE(TAG, "MQTT-URI is configured empty");

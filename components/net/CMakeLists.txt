@@ -22,5 +22,5 @@ idf_component_register(
                   esp_netif esp_wifi esp_eth esp_http_client esp_driver_gpio #PRIV_ESP_IDF
  )
 
-component_compile_options(${comp_compile_opts})
+component_compile_options(${comp_compile_opts} "-Wno-error=missing-field-initializers")
 component_compile_features(${comp_compile_feats})

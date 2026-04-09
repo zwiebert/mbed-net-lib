@@ -25,6 +25,7 @@
 #include "lwip/sys.h"
 #include "stdint.h"
 
+
 #define EXAMPLE_MAX_STA_CONN       4
 
 static const char *TAG = "wifi_ap";
@@ -59,6 +60,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
   }
 }
 
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers" 
 void wifiAp_setup(const char *ap_ssid, const char *ap_passwd) {
   if (our_wifi)
     wifiAp_setdown();
