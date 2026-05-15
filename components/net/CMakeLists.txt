@@ -1,19 +1,16 @@
 set(srcs  src/ipnet.cc) 
 set(platform_srcs esp32/ipnet.c  esp32/ntp.cc
   esp32/tcp_cli_server_task.cc esp32/wifi_ap.cc
-  esp32/http_client.cc) 
-include("${CMAKE_CURRENT_LIST_DIR}/../../source_filter.cmake")
-
-if(TEST_HOST)
-  list(APPEND srcs host/http_client.cc)
-endif()
+  esp32/http_client.cc host/http_client.cc) 
 
 if(DEFINED CONFIG_APP_USE_WLAN)
-  list(APPEND srcs esp32/wifistation.cc)
+  list(APPEND platform_srcs esp32/wifistation.cc)
 endif()
 if(DEFINED CONFIG_APP_USE_LAN)
-  list(APPEND srcs esp32/ethernet.cc)
+  list(APPEND platform_srcs esp32/ethernet.cc)
 endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/../../source_filter.cmake")
 
 idf_component_register(
     SRCS ${srcs} 
