@@ -1,7 +1,8 @@
-set(srcs  src/ipnet.cc
-esp32/ipnet.c  esp32/ntp.cc
+set(srcs  src/ipnet.cc) 
+set(platform_srcs esp32/ipnet.c  esp32/ntp.cc
   esp32/tcp_cli_server_task.cc esp32/wifi_ap.cc
   esp32/http_client.cc) 
+include("${CMAKE_CURRENT_LIST_DIR}/../../source_filter.cmake")
 
 if(TEST_HOST)
   list(APPEND srcs host/http_client.cc)

@@ -1,6 +1,7 @@
-set(srcs  esp32/network_connection.cc)
+set(srcs "")
+set(platform_srcs esp32/network_connection.cc) 
+include("${CMAKE_CURRENT_LIST_DIR}/../../source_filter.cmake")
 
-include("${CMAKE_CURRENT_LIST_DIR}/../source_filter.cmake" OPTIONAL)
 
 if(COMMAND idf_component_register)
 idf_component_register(
