@@ -1,4 +1,4 @@
-#include <sdkconfig.h>
+ 
 //////////////////////
 
 #include <net/network_connection.hh>

@@ -18,8 +18,8 @@ idf_component_register(
                     esp_wifi mbedtls #PRIV_ESP_IDF
  )
 
-component_compile_options(${comp_compile_opts})
-component_compile_features(${comp_compile_feats})
+ 
+target_compile_options(${COMPONENT_LIB} PRIVATE "SHELL:-include sdkconfig.h")
 
 else()
 add_library(net_http_server STATIC ${srcs})

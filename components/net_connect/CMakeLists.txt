@@ -1,4 +1,4 @@
-set(srcs "")
+set(srcs dummy.cc)
 set(platform_srcs esp32/network_connection.cc) 
 include("${CMAKE_CURRENT_LIST_DIR}/../../source_filter.cmake")
 
@@ -11,8 +11,7 @@ idf_component_register(
                    esp_netif
  )
 
-component_compile_options(${comp_compile_opts})
-component_compile_features(${comp_compile_feats})
+target_compile_options(${COMPONENT_LIB} PRIVATE "SHELL:-include sdkconfig.h")
 
 else()
 add_library(net_connect STATIC ${srcs})
